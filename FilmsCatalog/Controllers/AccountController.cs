@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FilmsCatalog.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace FilmsCatalog.Controllers
@@ -35,7 +34,7 @@ namespace FilmsCatalog.Controllers
             {
                 return View(model);
             }
-            
+
             var user = new User
             {
                 Email = model.Email,
@@ -44,20 +43,20 @@ namespace FilmsCatalog.Controllers
                 LastName = model.LastName,
                 MiddleName = model.MiddleName
             };
-            
+
             var created = await _userManager.CreateAsync(user, model.Password);
             if (created.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
                 _logger.LogInformation("User success signup!");
-                
+
                 return RedirectToAction("Index", "Home");
             }
 
             foreach (var error in created.Errors)
             {
                 _logger.LogError("User don't signup!");
-                ModelState.AddModelError(String.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, error.Description);
             }
 
             return View(model);
